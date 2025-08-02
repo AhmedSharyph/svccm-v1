@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ILR Temperature Monitoring Tool</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>ILR Temperature Monitoring</h1>
+  <div id="ilr-info"></div>
+  <form id="temp-form">
+    <label for="recordedAt">Date & Time of Measurement:</label>
+    <input type="datetime-local" id="recordedAt" required />
+
+    <label for="powerStatus">Power/Electric Status:</label>
+    <select id="powerStatus" required>
+      <option value="">-- Select --</option>
+      <option value="Running">Running</option>
+      <option value="Not Running">Not Running</option>
+    </select>
+
+    <label for="temperature">Temperature (°C):</label>
+    <input type="number" id="temperature" step="0.1" required />
+
+    <label for="staff">Staff:</label>
+    <select id="staff" required>
+      <option value="">Loading staff...</option>
+    </select>
+
+    <input type="hidden" id="ilrId" />
+    <input type="hidden" id="sheetId" />
+
+    <button type="submit">Submit & Next</button>
+  </form>
+  <div id="done-message" style="display:none;">All ILRs have been submitted. Thank you!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

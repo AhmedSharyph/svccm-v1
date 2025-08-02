@@ -1,0 +1,4 @@
+ILR_ID,Name,Status,Sheet_ID,Model,Serial,Photo_URL
+ILR001,Haier 90L,active,1GCnp-pJEhTt7VaeL1-NAqN5_chikI-Ltt6LJgShNFmA,HBCD-90,SN123456,https://via.placeholder.com/150
+ILR002,Godrej 120L,active,1GCnp-pJEhTt7VaeL1-NAqN5_chikI-Ltt6LJgShNFmA,GJ120,SN654321,https://via.placeholder.com/150
+ILR003,LG 85L,decommissioned,1GCnp-pJEhTt7VaeL1-NAqN5_chikI-Ltt6LJgShNFmA,LG85,SN000111,https://via.placeholder.com/150
