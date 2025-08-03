@@ -26,12 +26,12 @@
         const res = await fetch(ilrListURL);
         const ilrs = await res.json();
 
-        console.log('ILR Data:', ilrs);  // Debug: check what data is returned
+        console.log('ILR Data:', ilrs);  // Debug
 
         const ilrSelect = document.getElementById('ilr');
         ilrSelect.innerHTML = '';
 
-        // Filter active ILRs with case insensitive and trimming
+        // Filter active ILRs case-insensitive
         const activeILRs = ilrs.filter(i => i.Status && i.Status.toLowerCase().trim() === 'active');
 
         if (activeILRs.length === 0) {
@@ -42,8 +42,8 @@
 
         activeILRs.forEach(ilr => {
           const option = document.createElement('option');
-          option.value = ilr.ILR_ID || ilr.Name || '';
-          option.textContent = `${ilr.Name || 'Unnamed'} (${ilr.Model || 'No Model'})`;
+          option.value = ilr.ILR_ID;
+          option.textContent = `${ilr.Name} (${ilr.Model})`;
           ilrSelect.appendChild(option);
         });
 
