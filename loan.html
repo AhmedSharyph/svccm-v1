@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FridgeTrack - ILR Details Display</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    .ilr-info {
+      background-color: #f9f9f9;
+      border-left: 4px solid #0d6efd;
+      border-radius: 10px;
+      max-width: 400px;
+    }
+    .img-thumbnail {
+      max-width: 150px;
+    }
+  </style>
+</head>
+<body class="container py-5">
+  <h3>FridgeTrack - Select ILR to Show Details</h3>
+
+  <div class="mb-3">
+    <label for="ilr" class="form-label">ILR</label>
+    <select id="ilr" class="form-select">
+      <option>Loading ILRs...</option>
+    </select>
+  </div>
+
+  <div id="ilr-info" class="ilr-info card mb-3 p-3 shadow-sm" style="display:none;">
+    <h5 id="ilr-name" class="mb-2 fw-bold">Loading ILR info...</h5>
+    <p><strong>Model:</strong> <span id="ilr-model"></span></p>
+    <p><strong>Serial No.:</strong> <span id="ilr-serial"></span></p>
+    <img id="ilr-photo" class="img-thumbnail" alt="ILR Photo" />
+  </div>
+
+  <div id="status" class="text-muted small mt-3">Fetching ILRs...</div>
+
+  <script>
+    const ilrListURL = 'https://script.google.com/macros/s/AKfycbzihtn9My9Mo1axcBCpvrDqEsGHsrQo1F7ed50QpLgOxA6C-SfsSHyfq6KkTe-XYjfP/exec';
+    let ilrData = [];
+
+    async function loadILRs() {
+      try {
+        const res = await fetch(ilrListURL);
+        const ilrs = await res.json();
+
+        // Filter active ILRs
+        ilrData = ilrs.filter(i => i.Status && i.Status.toLowerCase().trim() === 'active');
+
+        const ilrSelect = document.getElementById('ilr');
+        ilrSelect.innerHTML = '';
+
+        if (ilrData.length === 0) {
+          ilrSelect.innerHTML = '<option>No active ILRs found</option>';
+          document.getElementById('status').textContent = '❌ No active ILRs found.';
+          return;
+        }
+
+        ilrData.forEach(ilr => {
+          const option = document.createElement('option');
+          option.value = ilr.ILR_ID;
+          option.textContent = `${ilr.Name} (${ilr.Model})`;
+          ilrSelect.appendChild(option);
+        });
+
+        document.getElementById('status').textContent = '✅ ILRs loaded successfully.';
+        document.getElementById('ilr-info').style.display = 'none';
+
+        // Auto-select first ILR and show details
+        ilrSelect.selectedIndex = 0;
+        showILRDetails(ilrSelect.value);
+
+      } catch (error) {
+        console.error('Failed to load ILR list:', error);
+        document.getElementById('status').textContent = '❌ Error loading ILR list.';
+      }
+    }
+
+    function showILRDetails(ilrId) {
+      const ilr = ilrData.find(i => i.ILR_ID === ilrId);
+      if (!ilr) return;
+
+      document.getElementById('ilr-name').textContent = ilr.Name;
+      document.getElementById('ilr-model').textContent = ilr.Model;
+      document.getElementById('ilr-serial').textContent = ilr.Serial;
+      document.getElementById('ilr-photo').src = ilr.Photo_URL;
+      document.getElementById('ilr-info').style.display = 'block';
+    }
+
+    // Event listener for dropdown change
+    document.getElementById('ilr').addEventListener('change', e => {
+      showILRDetails(e.target.value);
+    });
+
+    window.onload = loadILRs;
+  </script>
+</body>
+</html>
