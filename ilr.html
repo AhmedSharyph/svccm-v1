@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FridgeTrack - Test ILR List</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-5">
+  <h3>Test: Fetch ILR List</h3>
+
+  <div class="mb-3">
+    <label for="ilr" class="form-label">ILR</label>
+    <select id="ilr" class="form-select">
+      <option>Loading ILRs...</option>
+    </select>
+  </div>
+
+  <div id="status" class="text-muted small mt-3">Fetching...</div>
+
+  <script>
+    const ilrListURL = 'https://script.google.com/macros/s/AKfycbzihtn9My9Mo1axcBCpvrDqEsGHsrQo1F7ed50QpLgOxA6C-SfsSHyfq6KkTe-XYjfP/exec';
+
+    async function loadILRs() {
+      try {
+        const res = await fetch(ilrListURL);
+        const ilrs = await res.json();
+        const activeILRs = ilrs.filter(i => i.Status === 'Active');
+
+        const ilrSelect = document.getElementById('ilr');
+        ilrSelect.innerHTML = '';
+
+        if (activeILRs.length === 0) {
+          ilrSelect.innerHTML = '<option>No active ILRs found</option>';
+          document.getElementById('status').textContent = '❌ No active ILRs found.';
+          return;
+        }
+
+        activeILRs.forEach(ilr => {
+          const option = document.createElement('option');
+          option.value = ilr.ILR_ID;
+          option.textContent = `${ilr.Name} (${ilr.Model})`;
+          ilrSelect.appendChild(option);
+        });
+
+        document.getElementById('status').textContent = '✅ ILRs loaded successfully.';
+      } catch (error) {
+        console.error('Failed to load ILR list:', error);
+        document.getElementById('status').textContent = '❌ Error loading ILR list.';
+      }
+    }
+
+    window.onload = loadILRs;
+  </script>
+</body>
+</html>
